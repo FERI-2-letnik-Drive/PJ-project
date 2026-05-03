@@ -11,16 +11,19 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+/*
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+    background = LightMint
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Emerald,
+    secondary = Jade,
+    tertiary = Pink40,
+    background = LightMint
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -32,7 +35,39 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+*/
+private val AppColorScheme = lightColorScheme(
+    // main actions
+    primary = Emerald,
+    onPrimary = VeryDarkGreen,
 
+    // less important actions
+    secondary = Jade,
+    onSecondary = VeryDarkGreen,
+
+    background = LightMint,
+    onBackground = VeryDarkGreen,
+
+    // base for things on top of background (cards)
+    surface = LightSeafoam,
+    onSurface = VeryDarkGreen,
+
+    // highlights
+    tertiary = MediumMint
+)
+
+@Composable
+fun SmartMailBoxTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = AppColorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+
+/*
 @Composable
 fun SmartMailBoxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -56,3 +91,4 @@ fun SmartMailBoxTheme(
         content = content
     )
 }
+ */
