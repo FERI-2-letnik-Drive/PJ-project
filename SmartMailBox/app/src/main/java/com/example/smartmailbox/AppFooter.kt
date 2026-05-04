@@ -33,7 +33,7 @@ import com.example.smartmailbox.ui.theme.Emerald
 import com.example.smartmailbox.ui.theme.ForestGreen
 import com.example.smartmailbox.ui.theme.LightMint
 
-data class BottomNavigationItem(
+data class NavigationItem(
     val title: String,
     val selectedIcon: Int
     //val unselectedIcon: Int
@@ -44,15 +44,15 @@ fun AppFooter(
     modifier: Modifier = Modifier
 ) {
     val items = listOf(
-        BottomNavigationItem(
+        NavigationItem(
             title = "Home",
             selectedIcon = R.drawable.home_icon
         ),
-        BottomNavigationItem(
+        NavigationItem(
             title = "Scan",
             selectedIcon = R.drawable.qr_code_scanner
         ),
-        BottomNavigationItem(
+        NavigationItem(
             title = "Logs",
             selectedIcon = R.drawable.docs_icon
         )

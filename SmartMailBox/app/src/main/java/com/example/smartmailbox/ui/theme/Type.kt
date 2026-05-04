@@ -21,13 +21,21 @@ val Typography = Typography(
         fontWeight = FontWeight.ExtraBold,
         fontSize = 24.sp,
         lineHeight = 28.sp,
-        letterSpacing = 5.sp
+        letterSpacing = .5.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Alata,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
         lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelLarge = TextStyle(
+        color = VeryDarkGreen,
+        fontFamily = Alata,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
         letterSpacing = 0.5.sp
     )
 )
