@@ -18,7 +18,7 @@ fun OpenMailboxButton(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .height(72.dp)
-            .padding(8.dp),
+            .padding(0.dp, 8.dp),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(5.dp)
     ) {
