@@ -17,6 +17,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,47 +40,4 @@ class MainActivity : ComponentActivity() {
             App()
         }
     }
-}
-
-@Preview()
-@Composable
-fun App() {
-    SmartMailBoxTheme {
-        Scaffold { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                TopAppBar()
-            }
-        }
-    }
-}
-
-@Composable
-private fun TopAppBar(
-    modifier: Modifier = Modifier
-) {
-    val appTitle = stringResource(R.string.app_name)
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(ForestGreen)
-            .padding(20.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = appTitle,
-            modifier = Modifier,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
-}
-
-@Composable
-private fun AppFooter() {
-
 }
