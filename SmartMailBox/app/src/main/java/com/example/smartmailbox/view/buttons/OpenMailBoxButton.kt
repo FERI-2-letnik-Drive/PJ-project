@@ -1,4 +1,4 @@
-package com.example.smartmailbox.buttons
+package com.example.smartmailbox.view.buttons
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,16 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ScanQrButton(modifier: Modifier = Modifier) {
+fun OpenMailBoxButton(modifier: Modifier = Modifier) {
     Button(
         onClick = { /* TODO */ },
         modifier = modifier
             .fillMaxWidth()
             .height(72.dp)
-            .padding(8.dp),
+            .padding(0.dp, 8.dp),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(5.dp)
     ) {
-        Text("Scan QR Code")
+        Text("Open Mailbox")
     }
 }
+
