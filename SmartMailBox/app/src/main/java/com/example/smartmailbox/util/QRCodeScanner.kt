@@ -1,4 +1,4 @@
-package com.example.smartmailbox.QRCodeScanner
+package com.example.smartmailbox.util
 
 import android.graphics.ImageFormat
 import androidx.camera.core.ImageAnalysis

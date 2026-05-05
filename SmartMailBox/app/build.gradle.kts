@@ -64,4 +64,6 @@ dependencies {
     implementation("androidx.camera:camera-view:1.0.0-alpha31")
     // Zxing
     implementation("com.google.zxing:core:3.3.3")
+    // view model
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
 }

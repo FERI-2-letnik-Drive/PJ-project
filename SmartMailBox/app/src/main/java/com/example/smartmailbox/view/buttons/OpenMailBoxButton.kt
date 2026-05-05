@@ -1,4 +1,4 @@
-package com.example.smartmailbox.buttons
+package com.example.smartmailbox.view.buttons
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OpenMailboxButton(modifier: Modifier = Modifier) {
+fun OpenMailBoxButton(modifier: Modifier = Modifier) {
     Button(
         onClick = { /* TODO */ },
         modifier = modifier
