@@ -21,22 +21,22 @@ import com.example.smartmailbox.viewmodel.MailBoxViewModel
 import com.example.smartmailbox.view.buttons.ScanQRCodeButton
 
 @Composable
-fun MailBoxView(mailboxViewModel: MailBoxViewModel = viewModel(), paddingValues: PaddingValues) {
+fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues: PaddingValues) {
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(paddingValues)
     ) {
-        if (mailboxViewModel.isScannerRunning) {
+        if (mailBoxViewModel.scannerState.isScannerRunning) {
 
             QRCodeScannerView(
-                onQrCodeScanned = { mailboxViewModel.onQrCodeScanned(it) }
+                onQrCodeScanned = { mailBoxViewModel.onQrCodeScanned(it) }
             )
 
             Button(
-                onClick = { mailboxViewModel.cancelScanner() },
+                onClick = { mailBoxViewModel.cancelScanner() },
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .height(42.dp)
+                    .height(48.dp)
                     .padding(5.dp),
                 shape = RoundedCornerShape(5.dp),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
@@ -44,16 +44,16 @@ fun MailBoxView(mailboxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                 Text("Cancel")
             }
 
-            if (mailboxViewModel.scannedCode.isNotEmpty()) {
+            if (mailBoxViewModel.scannerState.scannedCode.isNotEmpty()) {
                 ScanQRCodeButton(
                     modifier = Modifier
                         .align(Alignment.BottomCenter),
-                    onClick = { mailboxViewModel.stopScanner() }
+                    onClick = { mailBoxViewModel.stopScannerAndGetScannedCode() }
                 )
             }
 
         } else {
-            if (mailboxViewModel.scannedCode.isNotEmpty()) {
+            if (mailBoxViewModel.scannerState.scannedCode.isNotEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -62,7 +62,7 @@ fun MailBoxView(mailboxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text("Mailbox code:")
-                    Text(mailboxViewModel.scannedCode)
+                    Text(mailBoxViewModel.scannerState.scannedCode)
 
                     OpenMailBoxButton()
                 }
@@ -72,7 +72,7 @@ fun MailBoxView(mailboxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                 modifier = Modifier
                     .align(Alignment.BottomCenter),
                 onClick = {
-                    mailboxViewModel.startScanner()
+                    mailBoxViewModel.startScanner()
                 }
             )
         }

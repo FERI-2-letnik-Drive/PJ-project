@@ -16,14 +16,14 @@ fun App() {
     }
     */
 
-    val mailboxViewModel: MailBoxViewModel = viewModel()
+    val mailBoxViewModel: MailBoxViewModel = viewModel()
 
     SmartMailBoxTheme {
         Scaffold(
             topBar = { TopAppBar() },
             bottomBar = { AppFooter() }
         ) { paddingValues ->
-            MailBoxView(mailboxViewModel, paddingValues)
+            MailBoxView(mailBoxViewModel, paddingValues)
             // HomeView(paddingValues = paddingValues)
             // LogsView(paddingValues = paddingValues)
         }

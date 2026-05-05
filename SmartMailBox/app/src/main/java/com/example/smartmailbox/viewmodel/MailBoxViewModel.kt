@@ -4,30 +4,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
+import com.example.smartmailbox.model.ScannerState
 
 class MailBoxViewModel : ViewModel() {
-    var scannedCode by mutableStateOf("")
-        private set
-
-    var isScannerRunning by mutableStateOf(false)
+    var scannerState by mutableStateOf(ScannerState())
         private set
 
     fun onQrCodeScanned(code: String) {
-        scannedCode = code
+        /*
+        Safety check. Camera can capture even after I call cancelScanner()
+        Camera runs on background thread and proccess 30-60FPS
+        Camera overrode my scannedCode because camera ran
+        after cancelScanner()
+        */
+        if (scannerState.isScannerRunning) {
+            scannerState = scannerState.copy(scannedCode = code)
+        }
     }
 
     fun startScanner() {
-        scannedCode = ""
-        isScannerRunning = true
+        scannerState = ScannerState(isScannerRunning = true)
     }
 
     fun cancelScanner() {
-        scannedCode = ""
-        isScannerRunning = false
+        scannerState = ScannerState()
     }
 
-    fun stopScanner() {
-        isScannerRunning = false
+    fun stopScannerAndGetScannedCode() {
+        scannerState = scannerState.copy(isScannerRunning = false)
     }
 
     fun openMailbox() {
