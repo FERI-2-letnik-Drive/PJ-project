@@ -61,23 +61,21 @@ class MailBoxViewModel : ViewModel() {
 
 
     fun openMailbox() {
-        //api
         viewModelScope.launch {
             apiState = apiState.copy(isLoading = true)
             try {
-                // call api
                 val data = createPostMailBoxData(scannerState.scannedCode)
+                // call API
                 val response = RetrofitInstance.api.postMailBoxData(
                     data
                 )
 
                 apiState = apiState.copy(response = response.body())
-                apiState = APIState()
                 //mailBoxState = MailBoxState(isMailBoxOpen = true)
                 Log.d("MailBoxAPI", "Response: $response")
                 Log.d("MailBoxAPI", "Response object: ${response.body()}")
 
-                // tu decode
+                // TODO: DECODE HERE (methods pls)
 
             } catch(e: Exception) {
                 apiState = APIState(isLoading = false, error = e.toString())
