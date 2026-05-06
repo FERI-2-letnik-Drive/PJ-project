@@ -28,6 +28,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.smartmailbox.navigation.NavigationScreen
 import com.example.smartmailbox.ui.theme.DarkGreen
 import com.example.smartmailbox.ui.theme.Emerald
 import com.example.smartmailbox.ui.theme.ForestGreen
@@ -35,30 +39,38 @@ import com.example.smartmailbox.ui.theme.LightMint
 
 data class NavigationItem(
     val title: String,
-    val selectedIcon: Int
+    val selectedIcon: Int,
+    val route: String
     //val unselectedIcon: Int
 )
 
 @Composable
 fun AppFooter(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
+    // last screen in stack (the one displaying) AsState, compose is watching it
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     val items = listOf(
         NavigationItem(
             title = "Home",
-            selectedIcon = R.drawable.home_icon
+            selectedIcon = R.drawable.home_icon,
+            route = NavigationScreen.Home.route
         ),
         NavigationItem(
             title = "Scan",
-            selectedIcon = R.drawable.qr_code_scanner
+            selectedIcon = R.drawable.qr_code_scanner,
+            route = NavigationScreen.Scan.route
         ),
         NavigationItem(
-            title = "Logs",
-            selectedIcon = R.drawable.docs_icon
+            title = "Log",
+            selectedIcon = R.drawable.docs_icon,
+            route = NavigationScreen.Log.route
         )
     )
 
-    var selectedItemIndex by remember { mutableStateOf(0) }
     /*
     Box(
         modifier = modifier
@@ -78,9 +90,16 @@ fun AppFooter(
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = selectedItemIndex == index,
-                onClick = { selectedItemIndex = index },
-
+                selected = currentRoute == item.route,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true // pause and save
+                        }
+                        launchSingleTop = true // prevent duplicates
+                        restoreState = true // restore previous saved state of screen
+                    }
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = item.selectedIcon),

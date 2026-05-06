@@ -13,9 +13,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartmailbox.view.buttons.OpenMailBoxButton
 import com.example.smartmailbox.viewmodel.MailBoxViewModel
@@ -23,6 +27,27 @@ import com.example.smartmailbox.view.buttons.ScanQRCodeButton
 
 @Composable
 fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues: PaddingValues) {
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                //Lifecycle.Event.ON_RESUME -> mailBoxViewModel.startScanner()
+                Lifecycle.Event.ON_PAUSE -> mailBoxViewModel.stopScanner()
+                else -> {}
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            mailBoxViewModel.stopScanner()
+        }
+    }
+
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(paddingValues)
@@ -34,7 +59,7 @@ fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues:
             )
 
             Button(
-                onClick = { mailBoxViewModel.cancelScanner() },
+                onClick = { mailBoxViewModel.stopScanner() },
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .height(48.dp)
@@ -49,7 +74,7 @@ fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                 ScanQRCodeButton(
                     modifier = Modifier
                         .align(Alignment.BottomCenter),
-                    onClick = { mailBoxViewModel.stopScannerAndGetScannedCode() }
+                    onClick = { mailBoxViewModel.stopScanner() }
                 )
             }
 

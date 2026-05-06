@@ -41,11 +41,14 @@ class MailBoxViewModel : ViewModel() {
         scannerState = ScannerState(isScannerRunning = true)
     }
 
+    /*
     fun cancelScanner() {
         scannerState = ScannerState()
     }
+    */
 
-    fun stopScannerAndGetScannedCode() {
+
+    fun stopScanner() {
         scannerState = scannerState.copy(isScannerRunning = false)
     }
 
