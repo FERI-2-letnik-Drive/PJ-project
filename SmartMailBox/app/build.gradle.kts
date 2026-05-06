@@ -66,4 +66,8 @@ dependencies {
     implementation("com.google.zxing:core:3.3.3")
     // view model
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+
+    // retrofit
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
 }

@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.sp
 
 // Set of Material typography styles to start with
 val Typography = Typography(
+    // Text
     bodyLarge = TextStyle(
         color = VeryDarkGreen,
         fontFamily = Alata,
@@ -30,6 +31,7 @@ val Typography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     ),
+    // default for text inside button
     labelLarge = TextStyle(
         color = VeryDarkGreen,
         fontFamily = Alata,

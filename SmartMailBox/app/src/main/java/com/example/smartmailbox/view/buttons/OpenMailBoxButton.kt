@@ -12,9 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OpenMailBoxButton(modifier: Modifier = Modifier) {
+fun OpenMailBoxButton(modifier: Modifier = Modifier,
+                      onClick: () -> Unit) {
     Button(
-        onClick = { /* TODO */ },
+        onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
             .height(72.dp)

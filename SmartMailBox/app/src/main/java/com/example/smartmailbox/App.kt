@@ -25,7 +25,7 @@ fun App() {
         ) { paddingValues ->
             MailBoxView(mailBoxViewModel, paddingValues)
             // HomeView(paddingValues = paddingValues)
-            // LogsView(paddingValues = paddingValues)
+            // LogView(paddingValues = paddingValues)
         }
     }
 }
