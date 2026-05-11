@@ -14,6 +14,11 @@ import com.example.smartmailbox.model.MailBoxState
 import com.example.smartmailbox.model.ScannerState
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
+import android.util.Base64
+import java.io.File
+import java.io.FileOutputStream
+import java.util.zip.ZipInputStream
+import java.io.ByteArrayInputStream
 
 class MailBoxViewModel : ViewModel() {
     var scannerState by mutableStateOf(ScannerState())
@@ -62,8 +67,33 @@ class MailBoxViewModel : ViewModel() {
         tokenFormat = 2 // wavzip
     )
 
+    private fun decodeBase64ToBytes(base64String: String): ByteArray {
+        return Base64.decode(base64String, Base64.DEFAULT)
+    }
 
-    fun openMailbox() {
+    private fun extractWavFromZip(zipBytes: ByteArray, outputDir: File): File? {
+        val zipInputStream = ZipInputStream(ByteArrayInputStream(zipBytes))
+        var wavFile: File? = null
+
+        var entry = zipInputStream.nextEntry
+        while (entry != null) {
+            if (entry.name.endsWith(".wav")) {
+                val outFile = File(outputDir, entry.name)
+                FileOutputStream(outFile).use { fos ->
+                    zipInputStream.copyTo(fos)
+                }
+                wavFile = outFile
+                Log.d("MailBoxAPI", "Extracted WAV: ${outFile.absolutePath}")
+            }
+            zipInputStream.closeEntry()
+            entry = zipInputStream.nextEntry
+        }
+
+        zipInputStream.close()
+        return wavFile
+    }
+
+    fun openMailbox(outputDir: File) {
         viewModelScope.launch {
             apiState = apiState.copy(isLoading = true)
             try {
@@ -78,7 +108,15 @@ class MailBoxViewModel : ViewModel() {
                 Log.d("MailBoxAPI", "Response: $response")
                 Log.d("MailBoxAPI", "Response object: ${response.body()}")
 
-                // TODO: DECODE HERE (methods pls)
+                val base64Data = response.body()?.data
+                if (base64Data != null) {
+                    val zipBytes = decodeBase64ToBytes(base64Data)
+                    val wavFile = extractWavFromZip(zipBytes, outputDir)
+                    Log.d("MailBoxAPI", "WAV file ready at: ${wavFile?.absolutePath}")
+                    // pripravljen za predvajanje
+                } else {
+                    Log.e("MailBoxAPI", "data je null v odgovoru")
+                }
 
             } catch(e: Exception) {
                 apiState = APIState(isLoading = false, error = e.toString())
