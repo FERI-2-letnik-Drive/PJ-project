@@ -24,10 +24,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartmailbox.view.buttons.OpenMailBoxButton
 import com.example.smartmailbox.viewmodel.MailBoxViewModel
 import com.example.smartmailbox.view.buttons.ScanQRCodeButton
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues: PaddingValues) {
 
+    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     DisposableEffect(lifecycleOwner) {
@@ -96,7 +98,7 @@ fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                         style = MaterialTheme.typography.bodySmall
                     )
 
-                    OpenMailBoxButton(onClick = { mailBoxViewModel.openMailbox() })
+                    OpenMailBoxButton(onClick = { mailBoxViewModel.openMailbox(context.cacheDir) })
                 }
             }
 
