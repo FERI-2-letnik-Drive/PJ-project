@@ -19,6 +19,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
 import java.io.ByteArrayInputStream
+import android.media.MediaPlayer
 
 class MailBoxViewModel : ViewModel() {
     var scannerState by mutableStateOf(ScannerState())
@@ -29,6 +30,8 @@ class MailBoxViewModel : ViewModel() {
 
     var apiState by mutableStateOf(APIState())
         private set
+
+    private var mediaPlayer: MediaPlayer? = null
 
     fun onQrCodeScanned(code: String) {
         /*
@@ -69,6 +72,20 @@ class MailBoxViewModel : ViewModel() {
 
     private fun decodeBase64ToBytes(base64String: String): ByteArray {
         return Base64.decode(base64String, Base64.DEFAULT)
+    }
+
+    private fun playWavFile(wavFile: File) {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(wavFile.absolutePath)
+            prepare()
+            start()
+            setOnCompletionListener {
+                Log.d("MailBoxAPI", "Predvajanje končano")
+                it.release()
+                mediaPlayer = null
+            }
+        }
     }
 
     private fun extractWavFromZip(zipBytes: ByteArray, outputDir: File): File? {
@@ -113,7 +130,11 @@ class MailBoxViewModel : ViewModel() {
                     val zipBytes = decodeBase64ToBytes(base64Data)
                     val wavFile = extractWavFromZip(zipBytes, outputDir)
                     Log.d("MailBoxAPI", "WAV file ready at: ${wavFile?.absolutePath}")
-                    // pripravljen za predvajanje
+                    if (wavFile != null) {
+                        playWavFile(wavFile)
+                    } else {
+                        Log.e("MailBoxAPI", "WAV datoteka ni bila najdena v zipu")
+                    }
                 } else {
                     Log.e("MailBoxAPI", "data je null v odgovoru")
                 }
@@ -122,5 +143,10 @@ class MailBoxViewModel : ViewModel() {
                 apiState = APIState(isLoading = false, error = e.toString())
             }
         }
+    }
+    override fun onCleared() {
+        super.onCleared()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }
