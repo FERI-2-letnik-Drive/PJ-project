@@ -45,7 +45,8 @@ val Typography = Typography(
         fontWeight = FontWeight.ExtraBold,
         fontSize = 32.sp,
         lineHeight = 40.sp,
-        letterSpacing = .5.sp
+        letterSpacing = .5.sp,
+        color = VeryDarkGreen
     ),
     labelSmall = TextStyle(
         fontFamily = Alata,
