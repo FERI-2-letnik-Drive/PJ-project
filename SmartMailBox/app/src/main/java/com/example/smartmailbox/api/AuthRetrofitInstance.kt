@@ -6,17 +6,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object AuthRetrofitInstance {
     // needs changing when it goes on different network
-    private const val BASE_URL = "http://192.168.175.1:3001/"
+    private const val BASE_URL = "http://192.168.2.51:3001/"
 
+    // retrofit sets the correct header automatically
     private val client = OkHttpClient.Builder()
-        .addInterceptor { chain ->
-            val request = chain.request()
-                .newBuilder()
-                .addHeader("Content-Type", "application/json")
-                .build()
-
-            chain.proceed(request)
-        }
+        .cookieJar(SessionCookieJar())
         .build()
 
     val api: AuthAPI by lazy {

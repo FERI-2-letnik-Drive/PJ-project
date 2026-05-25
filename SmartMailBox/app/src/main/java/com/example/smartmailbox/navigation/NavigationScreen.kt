@@ -8,4 +8,5 @@ sealed class NavigationScreen(val route: String) {
     object Log : NavigationScreen("log")
     object Login : NavigationScreen("login")
     object Profile : NavigationScreen("profile")
+    object FaceVerify : NavigationScreen("face_verify")
 }

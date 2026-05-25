@@ -13,11 +13,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.smartmailbox.navigation.NavigationScreen
 import com.example.smartmailbox.ui.theme.SmartMailBoxTheme
+import com.example.smartmailbox.view.FaceVerifyView
 import com.example.smartmailbox.view.HomeView
 import com.example.smartmailbox.view.LogView
 import com.example.smartmailbox.view.LoginView
 import com.example.smartmailbox.view.MailBoxView
 import com.example.smartmailbox.view.ProfileView
+import com.example.smartmailbox.viewmodel.FaceVerifyViewModel
 import com.example.smartmailbox.viewmodel.HomeViewModel
 import com.example.smartmailbox.viewmodel.LogViewModel
 import com.example.smartmailbox.viewmodel.LoginViewModel
@@ -40,11 +42,15 @@ fun App() {
     val logModel: LogViewModel = viewModel()
     val loginModel: LoginViewModel = viewModel()
     val profileViewModel: ProfileViewModel = viewModel()
+    val faceVerifyViewModel: FaceVerifyViewModel = viewModel()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showMainBars = currentRoute != NavigationScreen.Login.route
+    val showMainBars = currentRoute !in listOf(
+        NavigationScreen.Login.route,
+        NavigationScreen.FaceVerify.route
+    )
 
     SmartMailBoxTheme {
         Scaffold(
@@ -68,7 +74,7 @@ fun App() {
         ) { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = NavigationScreen.Home.route,
+                startDestination = NavigationScreen.Login.route,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
                 popEnterTransition = { fadeIn(tween(200)) },
@@ -86,12 +92,7 @@ fun App() {
                             }
                         },
                         onTwoFactorRequired = {
-                            // temporary until we add face-recognition
-                            navController.navigate(NavigationScreen.Home.route) {
-                                popUpTo(NavigationScreen.Login.route) {
-                                    inclusive = true
-                                }
-                            }
+                            navController.navigate(NavigationScreen.FaceVerify.route)
                         }
                     )
                 }
@@ -101,6 +102,25 @@ fun App() {
                         paddingValues = paddingValues,
                         onTwoFactorClick = {
                             // later navigate to Enable2FA screen
+                        }
+                    )
+                }
+                composable(NavigationScreen.FaceVerify.route) {
+                    FaceVerifyView(
+                        faceVerifyViewModel = faceVerifyViewModel,
+                        paddingValues = paddingValues,
+                        onVerifySuccess = {
+                            navController.navigate(NavigationScreen.Home.route) {
+                                popUpTo(NavigationScreen.Login.route) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        onBackToLogin = {
+                            navController.popBackStack(
+                                route = NavigationScreen.Login.route,
+                                inclusive = false
+                            )
                         }
                     )
                 }
