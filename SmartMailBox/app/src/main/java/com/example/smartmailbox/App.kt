@@ -17,10 +17,12 @@ import com.example.smartmailbox.view.HomeView
 import com.example.smartmailbox.view.LogView
 import com.example.smartmailbox.view.LoginView
 import com.example.smartmailbox.view.MailBoxView
+import com.example.smartmailbox.view.ProfileView
 import com.example.smartmailbox.viewmodel.HomeViewModel
 import com.example.smartmailbox.viewmodel.LogViewModel
 import com.example.smartmailbox.viewmodel.LoginViewModel
 import com.example.smartmailbox.viewmodel.MailBoxViewModel
+import com.example.smartmailbox.viewmodel.ProfileViewModel
 
 
 @Composable
@@ -37,6 +39,7 @@ fun App() {
     val mailBoxViewModel: MailBoxViewModel = viewModel()
     val logModel: LogViewModel = viewModel()
     val loginModel: LoginViewModel = viewModel()
+    val profileViewModel: ProfileViewModel = viewModel()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -47,7 +50,14 @@ fun App() {
         Scaffold(
             topBar = {
                 if (showMainBars) {
-                    TopAppBar()
+                    TopAppBar(
+                        onProfileClick = {
+                            navController.navigate(NavigationScreen.Profile.route) {
+                                // so we don't stack profile screens like Home -> Profile -> Profile -> Profile
+                                launchSingleTop = true
+                            }
+                        }
+                    )
                 }
             },
             bottomBar = {
@@ -58,7 +68,7 @@ fun App() {
         ) { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = NavigationScreen.Login.route,
+                startDestination = NavigationScreen.Home.route,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
                 popEnterTransition = { fadeIn(tween(200)) },
@@ -82,6 +92,15 @@ fun App() {
                                     inclusive = true
                                 }
                             }
+                        }
+                    )
+                }
+                composable(NavigationScreen.Profile.route) {
+                    ProfileView(
+                        profileViewModel = profileViewModel,
+                        paddingValues = paddingValues,
+                        onTwoFactorClick = {
+                            // later navigate to Enable2FA screen
                         }
                     )
                 }

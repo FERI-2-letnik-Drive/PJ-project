@@ -33,7 +33,8 @@ import com.example.smartmailbox.ui.theme.LightMint
 
 @Composable
 fun TopAppBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit
 ) {
     val appTitle = stringResource(R.string.app_name)
 
@@ -54,7 +55,7 @@ fun TopAppBar(
             style = MaterialTheme.typography.titleLarge
         )
         IconButton(
-            onClick = { },
+            onClick = onProfileClick,
             modifier = Modifier.size(48.dp),
         ) {
             Icon(
