@@ -20,3 +20,5 @@ val Emerald = Color(0xFF40916C) // Primary / Call-to-Action Buttons
 val ForestGreen = Color(0xFF2D6A4F) // Top App Bar
 val DarkGreen = Color(0xFF1B4332) // Subtitles/Footer
 val VeryDarkGreen = Color(0xFF081C15) // Main typography
+
+val ErrorRed = Color(0xFFFF3333)

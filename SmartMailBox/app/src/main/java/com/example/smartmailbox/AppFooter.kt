@@ -93,7 +93,8 @@ fun AppFooter(
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) {
+                        //popUpTo(navController.graph.startDestinationId) { before login
+                        popUpTo(NavigationScreen.Home.route) {
                             saveState = true // pause and save
                         }
                         launchSingleTop = true // prevent duplicates
