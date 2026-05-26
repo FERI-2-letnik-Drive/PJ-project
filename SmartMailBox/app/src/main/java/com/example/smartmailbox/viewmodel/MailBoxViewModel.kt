@@ -20,6 +20,7 @@ import java.io.FileOutputStream
 import java.util.zip.ZipInputStream
 import java.io.ByteArrayInputStream
 import android.media.MediaPlayer
+import com.example.smartmailbox.util.MailBoxQRParser
 
 class MailBoxViewModel : ViewModel() {
     var scannerState by mutableStateOf(ScannerState())
@@ -60,13 +61,8 @@ class MailBoxViewModel : ViewModel() {
         scannerState = scannerState.copy(isScannerRunning = false)
     }
 
-    private fun extractMailBoxId(url: String): Int {
-        val segments = url.trimEnd('/').split("/")
-        return segments[4].toInt()
-    }
-
     private fun createPostMailBoxData(url: String) : PostMailBoxData = PostMailBoxData(
-        boxId = extractMailBoxId(url),
+        boxId =  MailBoxQRParser.extractMailBoxId(url),
         tokenFormat = 2 // wavzip
     )
 
