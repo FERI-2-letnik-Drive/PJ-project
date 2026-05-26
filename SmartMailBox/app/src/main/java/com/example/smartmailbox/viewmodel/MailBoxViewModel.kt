@@ -138,7 +138,7 @@ class MailBoxViewModel : ViewModel() {
                 } else {
                     Log.e("MailBoxAPI", "data je null v odgovoru")
                 }
-
+                apiState = apiState.copy(isLoading = false)
             } catch(e: Exception) {
                 apiState = APIState(isLoading = false, error = e.toString())
             }
