@@ -98,7 +98,9 @@ fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                         style = MaterialTheme.typography.bodySmall
                     )
 
-                    OpenMailBoxButton(onClick = { mailBoxViewModel.openMailbox(context.cacheDir) })
+                    OpenMailBoxButton(
+                        mailBoxViewModel = mailBoxViewModel,
+                        onClick = { mailBoxViewModel.openMailbox(context.cacheDir) })
                 }
             }
 
