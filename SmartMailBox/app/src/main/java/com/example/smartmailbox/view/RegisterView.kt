@@ -166,7 +166,7 @@ fun RegisterView(
         ) {
             if (registerState.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.height(24.dp),
+                    modifier = Modifier.size(24.dp),
                     strokeWidth = 2.dp
                 )
             } else {
