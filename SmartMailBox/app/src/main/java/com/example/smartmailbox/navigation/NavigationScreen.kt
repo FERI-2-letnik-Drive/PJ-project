@@ -9,4 +9,5 @@ sealed class NavigationScreen(val route: String) {
     object Login : NavigationScreen("login")
     object Profile : NavigationScreen("profile")
     object FaceVerify : NavigationScreen("face_verify")
+    object Register : NavigationScreen("register")
 }

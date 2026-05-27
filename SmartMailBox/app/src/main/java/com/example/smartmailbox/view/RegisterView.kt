@@ -1,6 +1,5 @@
 package com.example.smartmailbox.view
 
-import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,62 +23,54 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smartmailbox.ui.theme.Alata
 import com.example.smartmailbox.ui.theme.ErrorRed
 import com.example.smartmailbox.ui.theme.ForestGreen
 import com.example.smartmailbox.ui.theme.VeryDarkGreen
-import com.example.smartmailbox.viewmodel.LoginViewModel
+import com.example.smartmailbox.viewmodel.RegisterViewModel
 
 @Composable
-fun LoginView(
-    loginViewModel: LoginViewModel,
-    onLoginSuccess: () -> Unit,
-    onTwoFactorRequired: () -> Unit,
-    onRegisterClick: () -> Unit
+fun RegisterView(
+    registerViewModel: RegisterViewModel,
+    paddingValues: PaddingValues,
+    onRegisterSuccess: () -> Unit,
+    onBackToLogin: () -> Unit
 ) {
-    val loginState = loginViewModel.loginState
+    val registerState = registerViewModel.registerState
 
-    LaunchedEffect(loginState.isLoggedIn) {
-        if (loginState.isLoggedIn) {
-            onLoginSuccess()
-            loginViewModel.clearLoginNavigationFlags()
-        }
-    }
-
-    LaunchedEffect(loginState.twoFactorRequired) {
-        if (loginState.twoFactorRequired) {
-            onTwoFactorRequired()
-            loginViewModel.clearLoginNavigationFlags()
+    LaunchedEffect(registerState.isRegistered) {
+        if (registerState.isRegistered) {
+            onRegisterSuccess()
+            registerViewModel.clearRegisterNavigationFlag()
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Login",
+            text = "Register",
             style = MaterialTheme.typography.headlineLarge
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = loginState.username,
-            onValueChange = loginViewModel::onUsernameChange,
+            value = registerState.username,
+            onValueChange = registerViewModel::onUsernameChange,
             label = { Text("Username") },
             modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyMedium,
             singleLine = true,
             shape = RoundedCornerShape(5.dp),
-            enabled = !loginState.isLoading,
+            enabled = !registerState.isLoading,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = VeryDarkGreen,
                 unfocusedBorderColor = VeryDarkGreen,
@@ -92,15 +82,33 @@ fun LoginView(
         Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
-            value = loginState.password,
-            onValueChange = loginViewModel::onPasswordChange,
-            label = { Text("Password") },
-            modifier = Modifier
-                .fillMaxWidth(),
+            value = registerState.email,
+            onValueChange = registerViewModel::onEmailChange,
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
             textStyle = MaterialTheme.typography.bodyMedium,
             singleLine = true,
-            enabled = !loginState.isLoading,
             shape = RoundedCornerShape(5.dp),
+            enabled = !registerState.isLoading,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = VeryDarkGreen,
+                unfocusedBorderColor = VeryDarkGreen,
+                focusedLabelColor = VeryDarkGreen,
+                cursorColor = VeryDarkGreen
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = registerState.password,
+            onValueChange = registerViewModel::onPasswordChange,
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            singleLine = true,
+            shape = RoundedCornerShape(5.dp),
+            enabled = !registerState.isLoading,
             visualTransformation = PasswordVisualTransformation(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = VeryDarkGreen,
@@ -110,11 +118,31 @@ fun LoginView(
             )
         )
 
-        if (loginState.errorMessage != null) {
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = registerState.confirmPassword,
+            onValueChange = registerViewModel::onConfirmPasswordChange,
+            label = { Text("Confirm Password") },
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = MaterialTheme.typography.bodyMedium,
+            singleLine = true,
+            shape = RoundedCornerShape(5.dp),
+            enabled = !registerState.isLoading,
+            visualTransformation = PasswordVisualTransformation(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = VeryDarkGreen,
+                unfocusedBorderColor = VeryDarkGreen,
+                focusedLabelColor = VeryDarkGreen,
+                cursorColor = VeryDarkGreen
+            )
+        )
+
+        if (registerState.errorMessage != null) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = loginState.errorMessage,
+                text = registerState.errorMessage,
                 fontFamily = Alata,
                 fontSize = 14.sp,
                 color = ErrorRed,
@@ -125,33 +153,37 @@ fun LoginView(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { loginViewModel.login() },
+            onClick = {
+                registerViewModel.register()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(72.dp)
                 .padding(0.dp, 8.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
             shape = RoundedCornerShape(5.dp),
-            enabled = !loginState.isLoading
+            enabled = !registerState.isLoading
         ) {
-            if (loginState.isLoading) {
+            if (registerState.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.height(24.dp),
                     strokeWidth = 2.dp
                 )
             } else {
-                Text("Login")
+                Text(
+                    text = "Register"
+                )
             }
         }
 
-        //Spacer(modifier = Modifier.height(5.dp))
+        //Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
-            onClick = onRegisterClick,
-            enabled = !loginState.isLoading
+            onClick = onBackToLogin,
+            enabled = !registerState.isLoading
         ) {
             Text(
-                text = "Don't have an account? Register",
+                text = "Already have an account? Login",
                 style = MaterialTheme.typography.bodySmall
             )
         }
