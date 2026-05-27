@@ -19,12 +19,14 @@ import com.example.smartmailbox.view.LogView
 import com.example.smartmailbox.view.LoginView
 import com.example.smartmailbox.view.MailBoxView
 import com.example.smartmailbox.view.ProfileView
+import com.example.smartmailbox.view.RegisterView
 import com.example.smartmailbox.viewmodel.FaceVerifyViewModel
 import com.example.smartmailbox.viewmodel.HomeViewModel
 import com.example.smartmailbox.viewmodel.LogViewModel
 import com.example.smartmailbox.viewmodel.LoginViewModel
 import com.example.smartmailbox.viewmodel.MailBoxViewModel
 import com.example.smartmailbox.viewmodel.ProfileViewModel
+import com.example.smartmailbox.viewmodel.RegisterViewModel
 
 
 @Composable
@@ -43,6 +45,7 @@ fun App() {
     val loginModel: LoginViewModel = viewModel()
     val profileViewModel: ProfileViewModel = viewModel()
     val faceVerifyViewModel: FaceVerifyViewModel = viewModel()
+    val registerViewModel: RegisterViewModel = viewModel()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -93,6 +96,9 @@ fun App() {
                         },
                         onTwoFactorRequired = {
                             navController.navigate(NavigationScreen.FaceVerify.route)
+                        },
+                        onRegisterClick = {
+                            navController.navigate(NavigationScreen.Register.route)
                         }
                     )
                 }
@@ -112,6 +118,25 @@ fun App() {
                         onVerifySuccess = {
                             navController.navigate(NavigationScreen.Home.route) {
                                 popUpTo(NavigationScreen.Login.route) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        onBackToLogin = {
+                            navController.popBackStack(
+                                route = NavigationScreen.Login.route,
+                                inclusive = false
+                            )
+                        }
+                    )
+                }
+                composable(NavigationScreen.Register.route) {
+                    RegisterView(
+                        registerViewModel = registerViewModel,
+                        paddingValues = paddingValues,
+                        onRegisterSuccess = {
+                            navController.navigate(NavigationScreen.Login.route) {
+                                popUpTo(NavigationScreen.Register.route) {
                                     inclusive = true
                                 }
                             }

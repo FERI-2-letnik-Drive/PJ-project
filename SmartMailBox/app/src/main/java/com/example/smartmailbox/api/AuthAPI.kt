@@ -17,9 +17,12 @@ interface AuthAPI {
     suspend fun getProfile(): Response<ProfileResponse>
     */
 
+    @POST("users/register")
+    suspend fun postRegister(@Body registerRequest: RegisterRequest
+    ): Response<RegisterResponse>
+
     @Multipart
     @POST("users/mobile-login/face-verify")
-    suspend fun postFaceVerify(
-        @Part currentImage: MultipartBody.Part
+    suspend fun postFaceVerify(@Part currentImage: MultipartBody.Part
     ): Response<FaceVerifyResponse>
 }
