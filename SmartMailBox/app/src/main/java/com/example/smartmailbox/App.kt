@@ -20,6 +20,7 @@ import com.example.smartmailbox.view.LoginView
 import com.example.smartmailbox.view.MailBoxView
 import com.example.smartmailbox.view.ProfileView
 import com.example.smartmailbox.view.RegisterView
+import com.example.smartmailbox.view.StartupView
 import com.example.smartmailbox.viewmodel.FaceVerifyViewModel
 import com.example.smartmailbox.viewmodel.HomeViewModel
 import com.example.smartmailbox.viewmodel.LogViewModel
@@ -27,6 +28,7 @@ import com.example.smartmailbox.viewmodel.LoginViewModel
 import com.example.smartmailbox.viewmodel.MailBoxViewModel
 import com.example.smartmailbox.viewmodel.ProfileViewModel
 import com.example.smartmailbox.viewmodel.RegisterViewModel
+import com.example.smartmailbox.viewmodel.SessionViewModel
 
 
 @Composable
@@ -46,11 +48,13 @@ fun App() {
     val profileViewModel: ProfileViewModel = viewModel()
     val faceVerifyViewModel: FaceVerifyViewModel = viewModel()
     val registerViewModel: RegisterViewModel = viewModel()
+    val sessionViewModel: SessionViewModel = viewModel()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val showMainBars = currentRoute !in listOf(
+        NavigationScreen.Startup.route,
         NavigationScreen.Login.route,
         NavigationScreen.FaceVerify.route
     )
@@ -77,12 +81,27 @@ fun App() {
         ) { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = NavigationScreen.Login.route,
+                startDestination = NavigationScreen.Startup.route,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
                 popEnterTransition = { fadeIn(tween(200)) },
                 popExitTransition = { fadeOut(tween(200)) }
             ) {
+                composable(NavigationScreen.Startup.route) {
+                    StartupView(
+                        sessionViewModel = sessionViewModel,
+                        onAuthenticated = {
+                            navController.navigate(NavigationScreen.Home.route) {
+                                popUpTo(NavigationScreen.Startup.route) { inclusive = true }
+                            }
+                        },
+                        onUnauthenticated = {
+                            navController.navigate(NavigationScreen.Login.route) {
+                                popUpTo(NavigationScreen.Startup.route) { inclusive = true }
+                            }
+                        }
+                    )
+                }
                 // navigateBack exists
                 composable(NavigationScreen.Login.route) {
                     LoginView(
@@ -108,6 +127,13 @@ fun App() {
                         paddingValues = paddingValues,
                         onTwoFactorClick = {
                             // later navigate to Enable2FA screen
+                        },
+                        onLogout = {
+                            sessionViewModel.logout {
+                                navController.navigate(NavigationScreen.Login.route) {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
                         }
                     )
                 }
