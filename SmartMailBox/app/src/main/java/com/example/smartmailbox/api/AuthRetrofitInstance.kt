@@ -8,10 +8,17 @@ object AuthRetrofitInstance {
     // needs changing when it goes on different network
     private const val BASE_URL = "http://192.168.2.51:3001/"
 
+    // Persistent cookie jar keeps the session cookie across app restarts.
+    val cookieJar: PersistentCookieJar by lazy {
+        PersistentCookieJar(SessionManager.prefs())
+    }
+
     // retrofit sets the correct header automatically
-    private val client = OkHttpClient.Builder()
-        .cookieJar(SessionCookieJar())
-        .build()
+    private val client: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .cookieJar(cookieJar)
+            .build()
+    }
 
     val api: AuthAPI by lazy {
         Retrofit.Builder()
