@@ -35,7 +35,8 @@ import com.example.smartmailbox.viewmodel.ProfileViewModel
 fun ProfileView(
     profileViewModel: ProfileViewModel,
     paddingValues: PaddingValues,
-    onTwoFactorClick: () -> Unit
+    onTwoFactorClick: () -> Unit,
+    onLogout: () -> Unit = {}
 ) {
     val profileState = profileViewModel.profileState
 
@@ -160,6 +161,27 @@ fun ProfileView(
         ) {
             Text(
                 text = "Change Password",
+                fontFamily = Alata,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = onLogout,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp),
+            shape = RoundedCornerShape(5.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = ErrorRed,
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                text = "Logout",
                 fontFamily = Alata,
                 fontWeight = FontWeight.Bold
             )
