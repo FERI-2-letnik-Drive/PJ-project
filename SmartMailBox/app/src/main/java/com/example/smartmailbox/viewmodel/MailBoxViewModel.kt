@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.smartmailbox.api.AuthRetrofitInstance
 import com.example.smartmailbox.api.MailBoxAPI
 import com.example.smartmailbox.api.PostMailBoxData
 import com.example.smartmailbox.api.RetrofitInstance
@@ -108,13 +109,70 @@ class MailBoxViewModel : ViewModel() {
 
     fun openMailbox(outputDir: File) {
         viewModelScope.launch {
-            apiState = apiState.copy(isLoading = true)
-            try {
-                val data = createPostMailBoxData(scannerState.scannedCode)
-                // call API
-                val response = RetrofitInstance.api.postMailBoxData(
-                    data
+            apiState = APIState(isLoading = true, statusMessage = "Checking permission…")
+            // First ask the RAIN backend whether this user is allowed to open.
+            val allowed = checkPermission()
+            if (!allowed) {
+                return@launch
+            }
+            openDirect4me(outputDir)
+        }
+    }
+
+    /**
+     * Asks the RAIN backend whether the logged-in user may open the mailbox.
+     * Uses the user's first mailbox for the permission check.
+     */
+    private suspend fun checkPermission(): Boolean {
+        return try {
+            val mailboxesResponse = AuthRetrofitInstance.mailboxApi.getMailboxes()
+            if (!mailboxesResponse.isSuccessful) {
+                apiState = apiState.copy(
+                    isLoading = false,
+                    accessDenied = true,
+                    statusMessage = "Not logged in or cannot load mailboxes"
                 )
+                return false
+            }
+            val mailboxId = mailboxesResponse.body().orEmpty().firstOrNull()?._id
+            if (mailboxId == null) {
+                apiState = apiState.copy(
+                    isLoading = false,
+                    accessDenied = true,
+                    statusMessage = "No mailbox found for this user"
+                )
+                return false
+            }
+            val unlockResponse = AuthRetrofitInstance.mailboxApi.unlock(mailboxId)
+            if (unlockResponse.isSuccessful) {
+                apiState = apiState.copy(statusMessage = "Permission granted, opening…")
+                true
+            } else {
+                apiState = apiState.copy(
+                    isLoading = false,
+                    accessDenied = true,
+                    statusMessage = "Access denied (${unlockResponse.code()})"
+                )
+                false
+            }
+        } catch (e: Exception) {
+            apiState = apiState.copy(
+                isLoading = false,
+                accessDenied = true,
+                statusMessage = "Permission check failed: ${e.message}"
+            )
+            false
+        }
+    }
+
+    /** Opens the physical Direct4me box by fetching and playing the token. */
+    private suspend fun openDirect4me(outputDir: File) {
+        try {
+            val data = createPostMailBoxData(scannerState.scannedCode)
+            // call API
+            val response = RetrofitInstance.api.postMailBoxData(
+                data
+            )
 
                 apiState = apiState.copy(response = response.body())
                 //mailBoxState = MailBoxState(isMailBoxOpen = true)
@@ -138,7 +196,6 @@ class MailBoxViewModel : ViewModel() {
             } catch(e: Exception) {
                 apiState = APIState(isLoading = false, error = e.toString())
             }
-        }
     }
     override fun onCleared() {
         super.onCleared()

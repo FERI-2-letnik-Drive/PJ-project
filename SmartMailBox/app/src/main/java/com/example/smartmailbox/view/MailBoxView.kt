@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -101,6 +102,17 @@ fun MailBoxView(mailBoxViewModel: MailBoxViewModel = viewModel(), paddingValues:
                     OpenMailBoxButton(
                         mailBoxViewModel = mailBoxViewModel,
                         onClick = { mailBoxViewModel.openMailbox(context.cacheDir) })
+
+                    val apiState = mailBoxViewModel.apiState
+                    val statusText = apiState.error ?: apiState.statusMessage
+                    if (statusText != null) {
+                        Text(
+                            text = statusText,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (apiState.accessDenied || apiState.error != null) Color.Red else Color.Unspecified,
+                            modifier = Modifier.padding(top = 12.dp)
+                        )
+                    }
                 }
             }
 
