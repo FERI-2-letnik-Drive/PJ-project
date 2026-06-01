@@ -20,12 +20,20 @@ object AuthRetrofitInstance {
             .build()
     }
 
-    val api: AuthAPI by lazy {
+    private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AuthAPI::class.java)
+    }
+
+    val api: AuthAPI by lazy {
+        retrofit.create(AuthAPI::class.java)
+    }
+
+    // RAIN mailbox endpoints, sharing the same session cookie.
+    val mailboxApi: RainMailboxApi by lazy {
+        retrofit.create(RainMailboxApi::class.java)
     }
 }
