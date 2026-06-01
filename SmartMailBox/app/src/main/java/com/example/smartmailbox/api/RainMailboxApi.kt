@@ -16,4 +16,7 @@ interface RainMailboxApi {
 
     @POST("mailboxes/{id}/unlock")
     suspend fun unlock(@Path("id") mailboxId: String): Response<UnlockResponse>
+
+    @GET("mailboxes/{id}/logs")
+    suspend fun getLogs(@Path("id") mailboxId: String): Response<List<OpenLogResponse>>
 }
