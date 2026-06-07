@@ -33,4 +33,8 @@ interface AuthAPI {
     @POST("users/mobile-login/face-verify")
     suspend fun postFaceVerify(@Part currentImage: MultipartBody.Part
     ): Response<FaceVerifyResponse>
+
+    @Multipart
+    @POST("users/2fa/enable")
+    suspend fun enableTwoFactor(@Part image: MultipartBody.Part): Response<TwoFactorResponse>
 }

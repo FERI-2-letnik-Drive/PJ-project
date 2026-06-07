@@ -20,6 +20,7 @@ import com.example.smartmailbox.view.LoginView
 import com.example.smartmailbox.view.MailBoxView
 import com.example.smartmailbox.view.ProfileView
 import com.example.smartmailbox.view.RegisterView
+import com.example.smartmailbox.view.Setup2faView
 import com.example.smartmailbox.view.StartupView
 import com.example.smartmailbox.viewmodel.FaceVerifyViewModel
 import com.example.smartmailbox.viewmodel.HomeViewModel
@@ -56,7 +57,9 @@ fun App() {
     val showMainBars = currentRoute !in listOf(
         NavigationScreen.Startup.route,
         NavigationScreen.Login.route,
-        NavigationScreen.FaceVerify.route
+        NavigationScreen.FaceVerify.route,
+        NavigationScreen.Setup2fa.route,
+        NavigationScreen.Register.route
     )
 
     SmartMailBoxTheme {
@@ -175,7 +178,33 @@ fun App() {
                         }
                     )
                 }
-                composable(NavigationScreen.Home.route) { HomeView(homeViewModel, paddingValues) }
+                composable(NavigationScreen.Home.route) {
+                    HomeView(
+                        homeViewModel = homeViewModel,
+                        paddingValues = paddingValues,
+                        onEnable2faClick = {
+                            navController.navigate(NavigationScreen.Setup2fa.route)
+                        }
+                    )
+                }
+                composable(NavigationScreen.Setup2fa.route) {
+                    Setup2faView(
+                        homeViewModel = homeViewModel,
+                        paddingValues = paddingValues,
+                        onDone = {
+                            navController.popBackStack(
+                                route = NavigationScreen.Home.route,
+                                inclusive = false
+                            )
+                        },
+                        onBack = {
+                            navController.popBackStack(
+                                route = NavigationScreen.Home.route,
+                                inclusive = false
+                            )
+                        }
+                    )
+                }
                 composable(NavigationScreen.Scan.route) { MailBoxView(mailBoxViewModel, paddingValues) }
                 composable(NavigationScreen.Log.route) { LogView(logModel, paddingValues) }
             }

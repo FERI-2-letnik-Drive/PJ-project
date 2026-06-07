@@ -11,4 +11,5 @@ sealed class NavigationScreen(val route: String) {
     object Profile : NavigationScreen("profile")
     object FaceVerify : NavigationScreen("face_verify")
     object Register : NavigationScreen("register")
+    object Setup2fa : NavigationScreen("setup_2fa")
 }
