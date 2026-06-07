@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object AuthRetrofitInstance {
     // needs changing when it goes on different network
-    private const val BASE_URL = "http://192.168.2.51:3001/"
+    private const val BASE_URL = "http://10.169.45.90:3001/"
 
     // Persistent cookie jar keeps the session cookie across app restarts.
     val cookieJar: PersistentCookieJar by lazy {

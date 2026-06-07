@@ -10,14 +10,14 @@ import android.content.SharedPreferences
 object SessionManager {
     private const val PREFS_NAME = "smartmailbox_session"
 
-    private lateinit var prefs: SharedPreferences
+    private lateinit var sharedPrefs: SharedPreferences
 
     fun init(context: Context) {
-        prefs = context.applicationContext
+        sharedPrefs = context.applicationContext
             .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    fun prefs(): SharedPreferences = prefs
+    fun prefs(): SharedPreferences = sharedPrefs
 
-    fun isInitialized(): Boolean = ::prefs.isInitialized
+    fun isInitialized(): Boolean = ::sharedPrefs.isInitialized
 }
