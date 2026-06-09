@@ -69,8 +69,14 @@ fun App() {
                     TopAppBar(
                         onProfileClick = {
                             navController.navigate(NavigationScreen.Profile.route) {
-                                // so we don't stack profile screens like Home -> Profile -> Profile -> Profile
+                                // same pattern as bottom tabs: pop back to Home first, so Profile
+                                // never ends up saved inside a tab's back stack segment
+                                // (otherwise restoreState on a tab click restores Profile on top)
+                                popUpTo(NavigationScreen.Home.route) {
+                                    saveState = true
+                                }
                                 launchSingleTop = true
+                                restoreState = true
                             }
                         }
                     )
